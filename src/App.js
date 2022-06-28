@@ -86,7 +86,7 @@ function App() {
           description: product[2],
           price: product[3],
           noOfAvailable: product[4],
-          sold: product[4]   
+          sold: product[5]   
         });
       });
       products.push(_products);

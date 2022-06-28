@@ -14,8 +14,6 @@ interface IERC20Token {
 }
 
 contract TechProduct {
-
-
     uint internal productsLength = 0;
     address internal cUsdTokenAddress = 0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
 
@@ -30,6 +28,17 @@ contract TechProduct {
 
     mapping (uint => Product) internal products;
 
+    event CreateProduct(uint256 index, address indexed owner);
+    event BuyProduct(uint256 index, address indexed buyer);
+    event ModifyPrice(uint256 index, uint256 newPrice);
+    event AddInventory(uint256 index, uint256 amount);
+    event ReduceInventory(uint256 index, uint256 amount);
+    event UnlistProduct(uint256 index);
+
+    modifier isOwner(uint256 _index) {
+        require(products[_index].owner == msg.sender, "Only owner of product allowed!");
+        _;
+    }
 
 // add a new product
     function addProduct(
@@ -47,33 +56,36 @@ contract TechProduct {
             _noOfAvailable,
             _sold
         );
-        productsLength++;
+
+        emit CreateProduct(productsLength, msg.sender);
+        productsLength++;        
     }
 
       // unlisting a product  from the marketplace
-        function unlistProduct(uint _index) external {
-	        require(msg.sender == products[_index].owner, "can't delete picture");         
+        function unlistProduct(uint _index) external isOwner(_index) {	            
             products[_index] = products[productsLength - 1];
             delete products[productsLength - 1];
             productsLength--; 
+
+            emit UnlistProduct(_index);
 	 }
 
       // to change the price of a picture in the list
-         function modifyPrice(uint _index, uint _newPrice) public {
-        require(msg.sender == products[_index].owner, "Only owner can modify the price");
+         function modifyPrice(uint _index, uint _newPrice) public isOwner(_index) {        
         products[_index].price = _newPrice;
+        emit ModifyPrice(_index, _newPrice);
     }
 
 // add more inventory
-    function addInventory(uint _index, uint _ammount) external{
-        require(msg.sender == products[_index].owner, "only owner can perform transaction");
+    function addInventory(uint _index, uint _ammount) external isOwner(_index){        
         products[_index].noOfAvailable = products[_index].noOfAvailable + _ammount;
+        emit AddInventory(_index, _ammount);
     }
 
 // reduce inventory
-    function reduceInventory(uint _index, uint _ammount) external{
-        require(msg.sender == products[_index].owner, "only owner can perform transaction");
+    function reduceInventory(uint _index, uint _ammount) external isOwner(_index) {        
         products[_index].noOfAvailable = products[_index].noOfAvailable - _ammount;
+        emit ReduceInventory(_index, _ammount);
     }
 
 
@@ -100,6 +112,7 @@ contract TechProduct {
 
     // to buy a picture
     function buyProduct(uint _index) public payable  {
+        require(products[_index].noOfAvailable > 0, "Product out of stock!");
         require(
           IERC20Token(cUsdTokenAddress).transferFrom(
             msg.sender,
@@ -110,6 +123,8 @@ contract TechProduct {
         );
         products[_index].sold++;
         products[_index].noOfAvailable--;
+
+        emit BuyProduct(_index, msg.sender);
     }
 
     

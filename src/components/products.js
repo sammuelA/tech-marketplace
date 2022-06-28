@@ -15,10 +15,10 @@ export const Products = (props) => {
     <img class="card-img-top" src={product.image} alt="Card image cap" />
     <div class="card-body">
       <h5 class="card-title">{product.sold} Products Sold</h5>
-      <h5 class="card-title">{product.noOfAvailable} Products Sold</h5>
+      <h5 class="card-title">{product.noOfAvailable > 0 ? `${product.noOfAvailable} Products Available` : `Sold out`}</h5>
       <p class="card-text">{product.description}</p>
       <p class="card-title">Price: {product.price  / 1000000000000000000}cUSD</p>
-      { props.walletAddress !== product.owner &&(
+      { props.walletAddress !== product.owner && product.noOfAvailable != 0 &&(
       <button type="button" onClick={()=>props.buyProduct(product.index)} class="btn btn-dark mt-2">Buy Product</button>
       )
 }

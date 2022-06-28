@@ -58,26 +58,23 @@ contract TechProduct {
             productsLength--; 
 	 }
 
-      // to change the price of a product
-         function modifyPrice(uint _index, uint _newPrice) public {
-        require(msg.sender == products[_index].owner, "Only owner can modify the price");
-        products[_index].price = _newPrice;
-    }
 
 // add more inventory
     function addInventory(uint _index, uint _ammount) external{
         require(msg.sender == products[_index].owner, "only owner can perform transaction");
+        require(_ammount != 0 , "only owner can perform transaction");
         products[_index].noOfAvailable = products[_index].noOfAvailable + _ammount;
     }
 
 // reduce inventory
     function reduceInventory(uint _index, uint _ammount) external{
         require(msg.sender == products[_index].owner, "only owner can perform transaction");
+        require(_ammount < products[_index].noOfAvailable, "only owner can perform transaction");
         products[_index].noOfAvailable = products[_index].noOfAvailable - _ammount;
     }
 
 
-// to get product
+// getting product
     function getProduct(uint _index) public view returns (
         address payable, 
         string memory, 
@@ -98,8 +95,9 @@ contract TechProduct {
     }
 
 
-    // to buy a product
+    //buying a product
     function buyProduct(uint _index) public payable  {
+        require(products[_index].noOfAvailable > 0, "Sold out");
         require(
           IERC20Token(cUsdTokenAddress).transferFrom(
             msg.sender,

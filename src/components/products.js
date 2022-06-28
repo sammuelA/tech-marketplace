@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from "react";
 
 export const Products = (props) => {
-  
   const [addInvAmount, setAddInvAmount] = useState();
   const [redInvAmount, setRedInvAmount] = useState();
 
@@ -15,9 +14,11 @@ export const Products = (props) => {
     <img class="card-img-top" src={product.image} alt="Card image cap" />
     <div class="card-body">
       <h5 class="card-title">{product.sold} Products Sold</h5>
+      <h5 class="card-title">{product.noOfAvailable > 0 ? `${product.noOfAvailable} Products Available` : `Sold out`}</h5>
       <p class="card-text">{product.description}</p>
       <p class="card-title">Price: {product.price  / 1000000000000000000}cUSD</p>
-      { props.walletAddress !== product.owner && (
+      
+      { props.walletAddress !== product.owner && product.noOfAvailable != 0 &&(
       <button type="button" onClick={()=>props.buyProduct(product.index)} class="btn btn-dark mt-2">Buy Product</button>
       )
 }
@@ -32,6 +33,19 @@ export const Products = (props) => {
   </div>
 </form>
 )}
+
+
+{ props.walletAddress === product.owner && (
+     <form>
+  <div class="form-r">
+      <input type="text" class="form-control mt-4" value={newprice}
+           onChange={(e) => setNewprice(e.target.value)} placeholder="enter ammount to add to inventory"/>
+      <button type="button" onClick={()=>props.modifyPrice(product.index, newprice)} class="btn btn-primary mt-2">Change Price</button>
+      
+  </div>
+</form>
+)}
+
 
 
       { props.walletAddress === product.owner && (

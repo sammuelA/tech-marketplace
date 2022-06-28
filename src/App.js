@@ -209,7 +209,13 @@ function App() {
   return (
     <div className="App">
       <NavigationBar cUSDBalance={cUSDBalance} />
-      <Products products={products} buyProduct={buyProduct} walletAddress={address} addInventory={addInventory} reduceInventory={reduceInventory}/>
+      <Products products={products}
+       buyProduct={buyProduct}
+       walletAddress={address}
+       addInventory={addInventory}
+       reduceInventory={reduceInventory} 
+       modifyPrice={modifyPrice} />
+    
       <AddProduct addProduct={addProduct} />
     </div>
   );

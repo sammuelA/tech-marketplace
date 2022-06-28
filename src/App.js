@@ -36,6 +36,7 @@ function App() {
   
 
 
+  // connect user wallet to dapp
   const connectToWallet = async () => {
     if (window.celo) {
       try {
@@ -57,6 +58,7 @@ function App() {
     }
   };
 
+  // get user balance
   const getBalance = useCallback(async () => {
     try {
       const balance = await kit.getTotalBalance(address);
@@ -71,7 +73,7 @@ function App() {
   }, [address, kit]);
 
 
-
+  // get all products from market
   const getProducts = useCallback(async () => {
     const productsLength = await contract.methods.getProductsLength().call();
     const products = [];
@@ -97,6 +99,7 @@ function App() {
   }, [contract]);
 
 
+  // add new product to market
   const addProduct = async (
     _image,
     _description,
@@ -115,6 +118,7 @@ function App() {
     }
   };
 
+  // update price of a product
   const modifyPrice = async (_index, _price) => { 
     const price = new BigNumber(_price).shiftedBy(ERC20_DECIMALS).toString();
     try {
@@ -127,7 +131,7 @@ function App() {
     }};
 
 
-
+    // add to product quantity
     const addInventory = async (
       _index,
       _ammount
@@ -142,6 +146,7 @@ function App() {
       }
     };
 
+    // reduce from product quantity
     const reduceInventory = async (
       _index,
       _ammount
@@ -157,9 +162,7 @@ function App() {
       }
     };
   
-
-
-
+// delete product from market
   const unlistProduct = async (
     _index
   ) => {
@@ -174,6 +177,7 @@ function App() {
   };
 
 
+  // buy product at index @index
   const buyProduct = async (_index) => {
     try {
       const cUSDContract = new kit.web3.eth.Contract(IERC, cUSDContractAddress);
@@ -209,13 +213,7 @@ function App() {
   return (
     <div className="App">
       <NavigationBar cUSDBalance={cUSDBalance} />
-      <Products products={products}
-       buyProduct={buyProduct}
-       walletAddress={address}
-       addInventory={addInventory}
-       reduceInventory={reduceInventory} 
-       modifyPrice={modifyPrice} />
-    
+      <Products products={products} buyProduct={buyProduct} walletAddress={address} addInventory={addInventory} reduceInventory={reduceInventory}/>
       <AddProduct addProduct={addProduct} />
     </div>
   );

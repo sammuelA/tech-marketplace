@@ -58,7 +58,7 @@ contract TechProduct {
             productsLength--; 
 	 }
 
-      // to change the price of a picture in the list
+      // to change the price of a product
          function modifyPrice(uint _index, uint _newPrice) public {
         require(msg.sender == products[_index].owner, "Only owner can modify the price");
         products[_index].price = _newPrice;
@@ -77,7 +77,7 @@ contract TechProduct {
     }
 
 
-// to get pictures from the list
+// to get product
     function getProduct(uint _index) public view returns (
         address payable, 
         string memory, 
@@ -98,7 +98,7 @@ contract TechProduct {
     }
 
 
-    // to buy a picture
+    // to buy a product
     function buyProduct(uint _index) public payable  {
         require(
           IERC20Token(cUsdTokenAddress).transferFrom(
@@ -113,7 +113,7 @@ contract TechProduct {
     }
 
     
-    // to get the length of a picture
+    // to get the length of products in the mapping
     function getProductsLength() public view returns (uint) {
         return (productsLength);
     }

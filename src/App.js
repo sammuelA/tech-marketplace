@@ -1,31 +1,22 @@
+import "./App.css";
 
-import './App.css';
-
-import { NavigationBar } from './components/navigation';
-import { Products } from './components/products';
-import { AddProduct } from './components/addproduct';
-
+import { NavigationBar } from "./components/navigation";
+import { Products } from "./components/products";
+import { AddProduct } from "./components/addproduct";
 
 import { useState, useEffect, useCallback } from "react";
-
 
 import Web3 from "web3";
 import { newKitFromWeb3 } from "@celo/contractkit";
 import BigNumber from "bignumber.js";
 
-
 import tech from "./contracts/tech.abi.json";
 import IERC from "./contracts/IERC.abi.json";
 
-
 const ERC20_DECIMALS = 18;
-
-
 
 const contractAddress = "0x50E058D38Aa084A77D5f166181913C1D443141e2";
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1";
-
-
 
 function App() {
   const [contract, setcontract] = useState(null);
@@ -33,8 +24,6 @@ function App() {
   const [kit, setKit] = useState(null);
   const [cUSDBalance, setcUSDBalance] = useState(0);
   const [products, setProducts] = useState([]);
-  
-
 
   const connectToWallet = async () => {
     if (window.celo) {
@@ -70,14 +59,12 @@ function App() {
     }
   }, [address, kit]);
 
-
-
   const getProducts = useCallback(async () => {
     const productsLength = await contract.methods.getProductsLength().call();
     const products = [];
     for (let index = 0; index < productsLength; index++) {
       let _products = new Promise(async (resolve, reject) => {
-      let product = await contract.methods.getProduct(index).call();
+        let product = await contract.methods.getProduct(index).call();
 
         resolve({
           index: index,
@@ -85,8 +72,8 @@ function App() {
           image: product[1],
           description: product[2],
           price: product[3],
-          noOfAvailable: product[4],
-          sold: product[5]   
+          stock: product[4],
+          sold: product[5],
         });
       });
       products.push(_products);
@@ -96,18 +83,11 @@ function App() {
     setProducts(_products);
   }, [contract]);
 
-
-  const addProduct = async (
-    _image,
-    _description,
-    _price,
-    _noOfAvailable
- 
-  ) => {
+  const addProduct = async (_image, _description, _price, _stock) => {
     let price = new BigNumber(_price).shiftedBy(ERC20_DECIMALS).toString();
     try {
       await contract.methods
-        .addProduct(_image, _description, price, _noOfAvailable)
+        .addProduct(_image, _description, price, _stock)
         .send({ from: address });
       getProducts();
     } catch (error) {
@@ -115,57 +95,21 @@ function App() {
     }
   };
 
-  const modifyPrice = async (_index, _price) => { 
+  const modifyPrice = async (_index, _price) => {
     const price = new BigNumber(_price).shiftedBy(ERC20_DECIMALS).toString();
     try {
       await contract.methods.modifyPrice(_index, price).send({ from: address });
       getProducts();
       alert("you have successfully changed the price");
-     
     } catch (error) {
       alert(error);
-    }};
+    }
+  };
 
-
-
-    const addInventory = async (
-      _index,
-      _ammount
-    ) => {
-      try {
-        await contract.methods
-          .addInventory(_index, _ammount)
-          .send({ from: address });
-        getProducts();
-      } catch (error) {
-        alert(error);
-      }
-    };
-
-    const reduceInventory = async (
-      _index,
-      _ammount
-   
-    ) => {
-      try {
-        await contract.methods
-          .reduceInventory(_index, _ammount)
-          .send({ from: address });
-        getProducts();
-      } catch (error) {
-        alert(error);
-      }
-    };
-  
-
-
-
-  const unlistProduct = async (
-    _index
-  ) => {
+  const addInventory = async (_index, _amount) => {
     try {
       await contract.methods
-        .unlistProduct(_index)
+        .addInventory(_index, _amount)
         .send({ from: address });
       getProducts();
     } catch (error) {
@@ -173,6 +117,25 @@ function App() {
     }
   };
 
+  const reduceInventory = async (_index, _amount) => {
+    try {
+      await contract.methods
+        .reduceInventory(_index, _amount)
+        .send({ from: address });
+      getProducts();
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const unlistProduct = async (_index) => {
+    try {
+      await contract.methods.unlistProduct(_index).send({ from: address });
+      getProducts();
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   const buyProduct = async (_index) => {
     try {
@@ -187,8 +150,8 @@ function App() {
       alert("you have successfully bought this image");
     } catch (error) {
       alert(error);
-    }};
-
+    }
+  };
 
   useEffect(() => {
     connectToWallet();
@@ -205,17 +168,20 @@ function App() {
       getProducts();
     }
   }, [contract, getProducts]);
-  
+
   return (
     <div className="App">
       <NavigationBar cUSDBalance={cUSDBalance} />
-      <Products products={products}
-       buyProduct={buyProduct}
-       walletAddress={address}
-       addInventory={addInventory}
-       reduceInventory={reduceInventory} 
-       modifyPrice={modifyPrice} />
-    
+      <Products
+        products={products}
+        buyProduct={buyProduct}
+        walletAddress={address}
+        addInventory={addInventory}
+        reduceInventory={reduceInventory}
+        modifyPrice={modifyPrice}
+        unlistProduct={unlistProduct}
+      />
+
       <AddProduct addProduct={addProduct} />
     </div>
   );

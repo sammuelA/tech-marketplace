@@ -3,9 +3,9 @@ import { useState } from "react";
 
 export const Products = (props) => {
 
-  const [addammount, setaddAmmount] = useState(0);
-  const [reduceammount, setreduceAmmount] = useState(0);
-  const [newprice, setNewprice] = useState(0);
+  const [addammount, setaddAmmount] = useState('');
+  const [reduceammount, setreduceAmmount] = useState('');
+  const [newprice, setNewprice] = useState('');
 
 
 
@@ -29,7 +29,7 @@ export const Products = (props) => {
   <div class="form-r">
       <input type="text" class="form-control mt-4" value={addammount}
            onChange={(e) => setaddAmmount(e.target.value)} placeholder="enter ammount to add to inventory"/>
-      <button type="button" onClick={()=>props.addInventory(product.index, ammount)} class="btn btn-primary mt-2">add Inventory</button>
+      <button type="button" onClick={()=>props.addInventory(product.index, addammount)} class="btn btn-primary mt-2">add Inventory</button>
       
   </div>
 </form>
@@ -42,7 +42,7 @@ export const Products = (props) => {
                    <div class="form-r">
                        <input type="text" class="form-control mt-4" value={reduceammount}
                             onChange={(e) => setreduceAmmount(e.target.value)} placeholder="enter ammount to remove from inventory"/>
-                       <button type="button" onClick={()=>props.reduceInventory(product.index, ammount)} class="btn btn-primary mt-2">reduce inventory</button>
+                       <button type="button" onClick={()=>props.reduceInventory(product.index, reduceammount)} class="btn btn-primary mt-2">reduce inventory</button>
                        
                    </div>
                  </form>

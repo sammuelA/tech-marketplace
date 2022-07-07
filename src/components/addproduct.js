@@ -5,8 +5,8 @@ export const AddProduct = (props) => {
 
 const [image, setImage] = useState('');
 const [description, setDescription] = useState('');
-const [price, setPrice] = useState(0);
-const [noOfAvailable, setNoOfAvailable] = useState(0);
+const [price, setPrice] = useState('');
+const [noOfAvailable, setNoOfAvailable] = useState('');
 
 
   return <div>

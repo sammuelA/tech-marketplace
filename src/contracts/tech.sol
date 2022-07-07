@@ -73,7 +73,7 @@ contract TechProduct {
         products[_index].noOfAvailable = products[_index].noOfAvailable - _ammount;
     }
 
-    // reduce inventory
+    // change product price
     function modifyPrice(uint _index, uint _newPrice) external{
         require(msg.sender == products[_index].owner, "only owner can perform transaction");
         require(_newPrice != 0, "invalid price");

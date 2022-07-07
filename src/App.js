@@ -22,7 +22,7 @@ const ERC20_DECIMALS = 18;
 
 
 
-const contractAddress = "0x50E058D38Aa084A77D5f166181913C1D443141e2";
+const contractAddress = "0x28D8DD43AF2C0f7951817080029073B5DbAE3d1e";
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1";
 
 

@@ -1,7 +1,7 @@
 # Tech-marketplace
 
 # Demo
-https://peaceful-zuccutto-cf989a.netlify.app
+https://gentle-praline-bb3ac3.netlify.app
 
 
 # Description

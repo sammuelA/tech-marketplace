@@ -6,7 +6,7 @@ export const NavigationBar = (props) => {
 
 
     <nav className="navbar"> 
-    <h1 className="brand-name">Picturea</h1>
+    <h1 className="brand-name">Tech-Marketplace</h1>
     <nav>
             <span> <li><a className="balance"><span>{props.cUSDBalance}</span>cUSD</a></li>
             </span>
